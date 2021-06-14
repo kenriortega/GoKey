@@ -54,7 +54,7 @@ func TestCacheGetUnknownKey(t *testing.T) {
 	}
 
 	// case ok
-	_, err = operations.Upsert("key", []byte("value"), 0)
+	_, err = operations.Upsert("key", []byte("value"), -1)
 	if err != nil {
 		t.Error("here: unexpected error")
 	}
@@ -65,7 +65,7 @@ func TestUpsertSameKey(t *testing.T) {
 	key := "key"
 	value := "value"
 	newValue := "newValue"
-	_, err := operations.Upsert(key, []byte(value), 0)
+	_, err := operations.Upsert(key, []byte(value), -1)
 
 	if err != nil {
 		t.Error("err should be nil", err)
@@ -81,7 +81,7 @@ func TestUpsertSameKey(t *testing.T) {
 		t.Errorf("got different value from cache. Expected: %s, got: %s", value, string(v))
 	}
 
-	_, err = operations.Upsert(key, []byte(newValue), 0)
+	_, err = operations.Upsert(key, []byte(newValue), -1)
 	v, err = operations.Get(key)
 
 	if string(v) != newValue {
@@ -94,7 +94,7 @@ func TestCacheConcurrentUpsert(t *testing.T) {
 	go operations.Upsert("key", []byte("value"), -1)
 	go operations.Upsert("key2", []byte("hello world"), -1)
 
-	time.Sleep(1000)
+	time.Sleep(time.Second)
 
 	value, err := operations.Get("key")
 	if err != nil {
@@ -103,7 +103,7 @@ func TestCacheConcurrentUpsert(t *testing.T) {
 
 	value2, err2 := operations.Get("key2")
 	if err2 != nil {
-		t.Error(err.Error())
+		t.Error(err2.Error())
 	}
 
 	res := string(value)
