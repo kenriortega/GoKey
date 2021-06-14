@@ -23,7 +23,7 @@ func TestCacheUpsert(t *testing.T) {
 
 // go test -run TestCacheGet -v
 func TestCacheGet(t *testing.T) {
-	_, err := operations.Upsert("key", []byte("value"), 10)
+	_, err := operations.Upsert("key", []byte("value"), -1)
 	if err != nil {
 		t.Error("expected no errors in Upsert method, got:", err.Error())
 	}
